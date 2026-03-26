@@ -7,7 +7,7 @@ dotenv.config();
 
 const app = express();
 
-// ✅ MIDDLEWARE (IMPORTANT)
+// ✅ MIDDLEWARE
 app.use(cors());
 app.use(express.json());
 
@@ -27,16 +27,30 @@ app.get("/", (req, res) => {
   res.send("Server working ✅");
 });
 
-// ✅ CONTACT ROUTE
+// ✅ CONTACT ROUTE (FINAL FIXED)
 app.post("/contact", (req, res) => {
   try {
     const { name, email, message } = req.body;
 
     console.log("Received:", name, email, message);
 
-    res.json({ message: "Message received ✅" });
+    if (!name || !email || !message) {
+      return res.status(400).json({ message: "All fields required ❌" });
+    }
+
+    // (Optional DB insert - safe to keep or remove)
+    const sql = "INSERT INTO contacts (name, email, message) VALUES (?, ?, ?)";
+    db.query(sql, [name, email, message], (err, result) => {
+      if (err) {
+        console.log("DB INSERT ERROR ❌", err);
+        return res.status(500).json({ message: "Database error ❌" });
+      }
+
+      return res.status(200).json({ message: "Message saved ✅" });
+    });
+
   } catch (err) {
-    console.log(err);
+    console.log("SERVER ERROR ❌", err);
     res.status(500).json({ message: "Server error ❌" });
   }
 });
