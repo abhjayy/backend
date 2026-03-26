@@ -1,28 +1,37 @@
-import express from "express"
-import mysql from "mysql2"
-import cors from "cors"
+import express from "express";
+import mysql from "mysql2";
+import cors from "cors";
+import dotenv from "dotenv";
 
-const app = express()
-app.use(cors())
+dotenv.config();
 
-const pool = mysql.createConnection({
-  host: "mainline.proxy.rlwy.net",
-  user: "root",
-  password: "coTdzjrPFwxGVMjwxeNQwNISVbrUqtgR",
-  database: "railway",
-  port: 46974
-})
+const app = express();
+app.use(cors());
+app.use(express.json());
 
-pool.connect((err) => {
+// DB connection
+const db = mysql.createConnection(process.env.DATABASE_URL);
+
+db.connect((err) => {
   if (err) {
-    console.log("❌ DB ERROR:", err)
+    console.log("DB ERROR ❌", err);
   } else {
-    console.log("✅ DB CONNECTED")
+    console.log("DB CONNECTED ✅");
   }
-})
+});
 
+// TEST ROUTE
 app.get("/", (req, res) => {
-  res.send("Server working ✅")
-})
+  res.send("Server + DB Connected ✅🔥");
+});
 
-app.listen(5000, () => console.log("Server running 🚀"))
+// API ROUTE (IMPORTANT)
+app.get("/api/test", (req, res) => {
+  res.json({ message: "Backend connected successfully 🚀" });
+});
+
+const PORT = process.env.PORT || 5000;
+
+app.listen(PORT, () => {
+  console.log("Server running 🚀");
+});
