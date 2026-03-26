@@ -6,10 +6,12 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const app = express();
+
+// ✅ MIDDLEWARE (IMPORTANT)
 app.use(cors());
 app.use(express.json());
 
-// DB connection
+// ✅ DB CONNECTION
 const db = mysql.createConnection(process.env.DATABASE_URL);
 
 db.connect((err) => {
@@ -20,12 +22,12 @@ db.connect((err) => {
   }
 });
 
-// TEST ROUTE
+// ✅ HOME ROUTE
 app.get("/", (req, res) => {
   res.send("Server working ✅");
 });
 
-// ✅ CONTACT ROUTE (FIXED)
+// ✅ CONTACT ROUTE
 app.post("/contact", (req, res) => {
   try {
     const { name, email, message } = req.body;
