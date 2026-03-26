@@ -25,9 +25,11 @@ app.get("/", (req, res) => {
   res.send("Server + DB Connected ✅🔥");
 });
 
-// API ROUTE (IMPORTANT)
-app.get("/api/test", (req, res) => {
-  res.json({ message: "Backend connected successfully 🚀" });
+// ✅ ADD THIS (IMPORTANT)
+app.post("/contact", (req, res) => {
+  console.log("Received data:", req.body);
+
+  res.json({ message: "Message received ✅" });
 });
 
 const PORT = process.env.PORT || 5000;
