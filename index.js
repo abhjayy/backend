@@ -22,14 +22,21 @@ db.connect((err) => {
 
 // TEST ROUTE
 app.get("/", (req, res) => {
-  res.send("Server + DB Connected ✅🔥");
+  res.send("Server working ✅");
 });
 
-// ✅ ADD THIS (IMPORTANT)
+// ✅ CONTACT ROUTE (FIXED)
 app.post("/contact", (req, res) => {
-  console.log("Received data:", req.body);
+  try {
+    const { name, email, message } = req.body;
 
-  res.json({ message: "Message received ✅" });
+    console.log("Received:", name, email, message);
+
+    res.json({ message: "Message received ✅" });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: "Server error ❌" });
+  }
 });
 
 const PORT = process.env.PORT || 5000;
